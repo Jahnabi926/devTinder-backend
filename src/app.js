@@ -43,8 +43,19 @@ app.get("/user", userAuth, (req, res) => {
   res.send("User Data sent");
 });
 
-app.get("/admin/getAllData", (req, res) => {
-  res.send("All Data Sent");
+app.get("/admin/getAllData", (req, res, next) => {
+  try {
+    throw new Error("Database crashed !");
+    // res.send("All Data Sent");
+  } catch (err) {
+    next(err); // ⬅️ this triggers the error handler or
+    //   res.status(500).send("Something broke");
+  }
+});
+
+app.use("/", (err, req, res, next) => {
+  console.error(err.message); // log the actual error
+  res.status(500).send("Something broke");
 });
 
 app.get("/admin/deleteUser", (req, res) => {
