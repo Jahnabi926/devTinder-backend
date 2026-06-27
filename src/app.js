@@ -48,6 +48,58 @@ app.get("/feed", async (req, res) => {
   }
 });
 
+// Delete a user from the database
+app.delete("/user", async (req, res) => {
+  const userId = req.body.userId; // get userId from request body
+
+  try {
+    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!deletedUser) {
+      res.status(404).send("User not found");
+    } else {
+      res.send("User deleted successfully");
+    }
+  } catch (error) {
+    res.status(500).send("Something went wrong");
+  }
+});
+
+// update the entire data of the user , PUT Replaces the entire document with new data. Whatever you don't send — gets deleted/overwritten
+app.put("/user", async (req, res) => {
+  const userId = req.body.userId;
+  const data = req.body;
+
+  try {
+    const updateUser = await User.findOneAndReplace({ _id: userId }, data);
+    if (!updateUser) {
+      res.status(404).send("User data not found");
+    } else {
+      res.send("User updated successfully");
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Something went wrong");
+  }
+});
+
+// update only a few fields of the data. PATCH. Updates only the fields you send. Everything else stays as it is
+app.patch("/user", async (req, res) => {
+  const userId = req.body.userId;
+  const data = req.body;
+
+  try {
+    const updateUser = await User.findByIdAndUpdate(userId, data);
+    if (!updateUser) {
+      res.status(404).send("User data not found");
+    } else {
+      res.send("User data updated");
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Something went wrong");
+  }
+});
+
 // ⬇️ catches everything that didn't match above
 app.use((req, res) => {
   res.status(404).send("Route not found !");
