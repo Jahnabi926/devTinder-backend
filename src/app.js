@@ -5,14 +5,11 @@ const User = require("./models/user");
 
 const app = express(); // calling express
 
+app.use(express.json()); // express.json is a middleware to convert the json data of request body to js object and send to the server to add it to the database
+
 app.post("/signup", async (req, res) => {
   // creating a new user instance of the User model
-  const user = new User({
-    firstName: "Manash",
-    lastName: "Sarma",
-    emailId: "manash11@gmail.com",
-    password: "manash@111",
-  });
+  const user = new User(req.body);
 
   try {
     await user.save(); // saves the data to the database
