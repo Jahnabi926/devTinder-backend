@@ -70,7 +70,14 @@ app.put("/user", async (req, res) => {
   const data = req.body;
 
   try {
-    const updateUser = await User.findOneAndReplace({ _id: userId }, data);
+    if (data?.skills?.length > 10) {
+      throw new Error("Skills cannot be more than 10");
+    }
+
+    const updateUser = await User.findOneAndReplace({ _id: userId }, data, {
+      runValidators: true,
+    });
+
     if (!updateUser) {
       res.status(404).send("User data not found");
     } else {
@@ -82,11 +89,26 @@ app.put("/user", async (req, res) => {
 });
 
 // update only a few fields of the data. PATCH. Updates only the fields you send. Everything else stays as it is
-app.patch("/user", async (req, res) => {
-  const userId = req.body.userId;
+app.patch("/user/:userId", async (req, res) => {
+  const userId = req.params?.userId;
   const data = req.body;
 
   try {
+    // API VALIDATION - line 90 to 99 -- js goes through each field of the req body and checks if it is included in the allowd array, if yes then updates the user or else throws an error. isUpdateAllowed returns true or false
+    const ALLOWED_UPDATES = ["age", "gender", "photoUrl", "about", "skills"];
+
+    const isUpdateAllowed = Object.keys(data).every((k) =>
+      ALLOWED_UPDATES.includes(k),
+    );
+
+    if (!isUpdateAllowed) {
+      throw new Error("Update not allowed");
+    }
+
+    if (data?.skills?.length > 10) {
+      throw new Error("Skills cannot be more than 10");
+    }
+
     const updateUser = await User.findByIdAndUpdate(userId, data, {
       runValidators: true,
     });
