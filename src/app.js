@@ -77,8 +77,7 @@ app.put("/user", async (req, res) => {
       res.send("User updated successfully");
     }
   } catch (error) {
-    console.log(error.message);
-    res.status(500).send("Something went wrong");
+    res.status(500).send("Update Failed- " + error.message);
   }
 });
 
@@ -88,15 +87,16 @@ app.patch("/user", async (req, res) => {
   const data = req.body;
 
   try {
-    const updateUser = await User.findByIdAndUpdate(userId, data);
+    const updateUser = await User.findByIdAndUpdate(userId, data, {
+      runValidators: true,
+    });
     if (!updateUser) {
       res.status(404).send("User data not found");
     } else {
       res.send("User data updated");
     }
   } catch (error) {
-    console.log(error.message);
-    res.status(500).send("Something went wrong");
+    res.status(500).send("Update Failed- " + error.message);
   }
 });
 
