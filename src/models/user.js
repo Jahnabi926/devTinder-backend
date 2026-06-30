@@ -1,5 +1,7 @@
 const mongoose = require("mongoose"); // importing mongoose
 const validator = require("validator");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const validateEmail = (value) => {
   if (!validator.isEmail(value)) {
@@ -71,6 +73,35 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+// Adding userSchema methods BEFORE creating the model
+userSchema.methods.getJWT = async function () {
+  // arrow functions won't work for "this" keyword
+  const user = this; // "this" is refering to that user who logged in
+
+  // Create a JWT Token for the logged in user
+  const token = await jwt.sign({ _id: user._id }, "DEV@Tinder$101", {
+    expiresIn: "1d",
+  });
+  return token;
+};
+
+// Creating userSchema methods to compare password(passwordInputByUser)
+// Validating password for user trying to log in
+
+userSchema.methods.validatePassword = async function (passwordInputByUser) {
+  const user = this;
+  const passwordHash = user.password;
+
+  const isPasswordValid = await bcrypt.compare(
+    passwordInputByUser,
+    passwordHash,
+  );
+  return isPasswordValid;
+};
+
 const User = mongoose.model("User", userSchema); // creating a model
+
+// Instances of Models are documents. Documents have many of their own built-in instance methods.
+// Creating userSchema methods to getJWT()
 
 module.exports = User; // exporting a model
