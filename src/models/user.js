@@ -8,7 +8,7 @@ const validateEmail = (value) => {
     throw new Error("Invalid email address " + value);
   }
 };
-const validatePassword = (value) => {
+const validatePasswordStrength = (value) => {
   if (!validator.isStrongPassword(value)) {
     throw new Error("Enter a strong password " + value);
   }
@@ -19,6 +19,9 @@ const validateUrl = (value) => {
     throw new Error("Invalid photo Url ", +value);
   }
 };
+
+// creating a document instance from the model.
+// Instances of Models are documents. Documents have many of their own built-in instance methods.
 
 const userSchema = new mongoose.Schema(
   {
@@ -43,7 +46,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      validate: validatePassword,
+      validate: validatePasswordStrength,
     },
     age: {
       type: Number,
@@ -88,7 +91,7 @@ userSchema.methods.getJWT = async function () {
 // Creating userSchema methods to compare password(passwordInputByUser)
 // Validating password for user trying to log in
 
-userSchema.methods.validatePassword = async function (passwordInputByUser) {
+userSchema.methods.comparePassword = async function (passwordInputByUser) {
   const user = this;
   const passwordHash = user.password;
 
@@ -101,7 +104,6 @@ userSchema.methods.validatePassword = async function (passwordInputByUser) {
 
 const User = mongoose.model("User", userSchema); // creating a model
 
-// Instances of Models are documents. Documents have many of their own built-in instance methods.
 // Creating userSchema methods to getJWT()
 
 module.exports = User; // exporting a model
