@@ -10,10 +10,12 @@ app.use(cookieParser()); // Initialize the cookie parser middleware
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
+const userRouter = require("./routes/user");
 
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
+app.use("/", userRouter);
 
 // ⬇️ catches everything that didn't match above
 app.use((req, res) => {
