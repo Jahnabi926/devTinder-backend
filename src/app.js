@@ -1,9 +1,16 @@
 const express = require("express"); // importing the module express from node modules
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/database");
+const cors = require("cors");
 
 const app = express(); // calling express
 
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 app.use(express.json()); // express.json is a middleware to convert the json data of request body to js object and send to the server to add it to the database
 app.use(cookieParser()); // Initialize the cookie parser middleware
 

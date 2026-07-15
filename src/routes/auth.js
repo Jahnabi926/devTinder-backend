@@ -20,8 +20,14 @@ authRouter.post("/signup", async (req, res) => {
       password: passwordHash,
     }); // Creates a new user object in memory (like a JS object)
 
-    await user.save(); // saves the data to the database
-    res.send("User added successfully");
+    const savedUser = await user.save(); // saves the data to the database
+
+    const token = await user.getJWT();
+
+    // Send the token to the browser inside a secure cookie
+    res.cookie("token", token, { maxAge: 24 * 60 * 60 * 1000 }); // expires in 24 hours
+
+    res.json({ message: "User added successfully", data: savedUser });
   } catch (error) {
     res.status(400).send("ERROR : " + error.message);
   }
@@ -45,7 +51,7 @@ authRouter.post("/login", async (req, res) => {
       // Send the token to the browser inside a secure cookie
       res.cookie("token", token, { maxAge: 24 * 60 * 60 * 1000 }); // expires in 24 hours
 
-      res.send("Login Successful !!");
+      res.json({ message: "Login Successful !!", data: user });
     } else {
       throw new Error("Invalid Credentials");
     }
