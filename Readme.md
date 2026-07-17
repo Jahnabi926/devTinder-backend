@@ -19,3 +19,9 @@
 const senEmailBodyCommand = (toAddress, fromAddress, subject, body) {... , Subject: {.. Data: subject}, Body: {{Data: `<h1>${body}</h1>`}}}
 write a custom message or the response inside run, const emailRes = await sendEmail.run(here)
 -- Check your or the emails of the receiver to receive the customised email from the aws that "somebody is interested in the receiver"
+-- create your .env file in the aws machine as our github code doesnot have th dotenv file which contains the secret keys needed to run our code.
+-- login to your machine by ssh
+-- Run git pull to get the lastest pushed code from github. restart pm2 or stop and start fresh.
+-- sudo nano .env to edit the .env file, add the contents of env file.
+-- restart pm2 and refresh devtinder.in/login and explore.
+-- Always keep your pem files safe.
