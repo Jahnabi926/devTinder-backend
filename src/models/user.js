@@ -59,6 +59,13 @@ const userSchema = new mongoose.Schema(
         message: "Gender must be male, female or others",
       },
     },
+    isPremium: {
+      type: Boolean,
+      default: false,
+    },
+    membershipType: {
+      type: String,
+    },
     photoUrl: {
       type: String,
       default:

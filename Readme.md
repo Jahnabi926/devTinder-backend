@@ -62,3 +62,30 @@ write a custom message or the response inside run, const emailRes = await sendEm
 -- Amazon SES Bulk emails
 -- Make sendEmail function dynamic
 -- bee-queue && bull npm packages
+
+# Payment Gateway Integration ft. Razorpay
+
+-- Sign up to RazorPay & complete KYC
+-- Created a UI for premium page.
+-- Created an api for create order in backend
+-- Check "Razorpay documentation node js" and "npm i razorpay" in backend, follow Integrate With Razorpay Payment Gateway
+-- Added my key and secret in env file
+-- Initialised razorpay in utils
+-- Created order on RazorPay
+-- Created Schema and Model
+-- Saved the order in payments collection
+-- Make the API dynamic (passing gold, silver memberships)
+-- Setup Razorpay webhook on your live api . localhost won't work here. Go to razorpay website dashboard -> accounts & settings -> webhooks -> Add new webhook -> webhook url (https://devTinder.in/api/payment/webhook), secret, check payment fail, captured -> create webhook.
+
+-- Ref - https://github.com/razorpay/razorpay-node/tree/master/documents
+-- Ref - https://razorpay.com/docs/payments/server-integration/nodejs/integration-steps/#integrate-with-razorpay-payment-gateway
+-- Ref - https://razorpay.com/docs/webhooks/validate-test?search-string=validate%20and%20test
+-- Ref - https://razorpay.com/docs/webhooks/payments/
+
+## The flow
+
+-- Pay Now button will call an create order api that will create an order at razor pay with a secret key sent from backend, and returns back an order Id to the frontend.
+
+-- Frontend should open the razorpay dialog box
+-- Once the payment is successful, razorpay will send a webhook to us
+-- "webhook" is what api should razorpay call if a payment is success or fail. Whenever there will be a successful transaction, the webhook url will be called.
