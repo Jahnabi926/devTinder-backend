@@ -81,11 +81,17 @@ write a custom message or the response inside run, const emailRes = await sendEm
 -- Ref - https://razorpay.com/docs/payments/server-integration/nodejs/integration-steps/#integrate-with-razorpay-payment-gateway
 -- Ref - https://razorpay.com/docs/webhooks/validate-test?search-string=validate%20and%20test
 -- Ref - https://razorpay.com/docs/webhooks/payments/
+-- Push, Deploy and Test your code
 
 ## The flow
 
--- Pay Now button will call an create order api that will create an order at razor pay with a secret key sent from backend, and returns back an order Id to the frontend.
+-- Pay Now button calls your backend's create-order API. The backend uses RAZORPAY_KEY_ID + RAZORPAY_KEY_SECRET to authenticate with Razorpay's servers and creates an order there. Razorpay returns an orderId, which the backend sends back to the frontend (along with the public RAZORPAY_KEY_ID).
 
--- Frontend should open the razorpay dialog box
+-- After receiving the orderId, Frontend should open the razorpay dialog box
 -- Once the payment is successful, razorpay will send a webhook to us
 -- "webhook" is what api should razorpay call if a payment is success or fail. Whenever there will be a successful transaction, the webhook url will be called.
+-- Payment is verified by calling an api from frontend and UI is updated for payment success or failure.
+
+Note --
+Webhook is the server-to-server notification for payment success/failure (this is the reliable source of truth, not the frontend redirect).
+Why webhooks matter at all — a user could close the browser tab right after paying, before the frontend gets a chance to confirm anything. The webhook guarantees your backend still finds out and updates the payment status, independent of what the frontend does. That's the actual reason localhost doesn't work for webhooks — Razorpay's servers need a publicly reachable URL to call.
