@@ -95,3 +95,9 @@ write a custom message or the response inside run, const emailRes = await sendEm
 Note --
 Webhook is the server-to-server notification for payment success/failure (this is the reliable source of truth, not the frontend redirect).
 Why webhooks matter at all — a user could close the browser tab right after paying, before the frontend gets a chance to confirm anything. The webhook guarantees your backend still finds out and updates the payment status, independent of what the frontend does. That's the actual reason localhost doesn't work for webhooks — Razorpay's servers need a publicly reachable URL to call.
+
+# Real Time Chat using Websocket(Socket.io)
+
+-- Build the UI for a chat window /chat/:targetUserId
+-- Setup socket.io in backend
+-- npm i socket.io
