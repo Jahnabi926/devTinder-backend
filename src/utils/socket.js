@@ -1,5 +1,6 @@
 const socket = require("socket.io");
 const crypto = require("crypto");
+const { Chat } = require("../models/chat");
 
 const getSecretRoomId = (userId, targetUserId) => {
   return crypto
@@ -15,6 +16,7 @@ const initializeSocket = (server) => {
   });
 
   io.on("connection", (socket) => {
+    // io.on("connection") — fires on the server when a new client connects
     // Handle Events
 
     socket.on("joinChat", ({ firstName, userId, targetUserId }) => {
@@ -23,12 +25,39 @@ const initializeSocket = (server) => {
       socket.join(roomId);
     });
 
-    socket.on("sendMessage", ({ firstName, userId, targetUserId, text }) => {
-      const roomId = getSecretRoomId(userId, targetUserId);
-      io.to(roomId).emit("messageReceived", { firstName, text });
-    });
+    socket.on(
+      "sendMessage",
+      async ({ firstName, lastName, userId, targetUserId, text }) => {
+        // Save message to database
+        try {
+          // Todo: check if userId and targetUserId are friends
 
-    socket.on("disconnect", () => {});
+          const roomId = getSecretRoomId(userId, targetUserId);
+
+          // Find chats that have both 'userId' and 'targetUserId' participants
+          let chat = await Chat.findOne({
+            participants: { $all: [userId, targetUserId] },
+          });
+
+          if (!chat) {
+            chat = new Chat({
+              participants: [userId, targetUserId],
+              messages: [],
+            });
+          }
+          chat.messages.push({
+            senderId: userId,
+            text,
+          });
+          await chat.save();
+          io.to(roomId).emit("messageReceived", { firstName, lastName, text }); // io.to(roomId).emit(...) — method names for broadcasting to a room
+        } catch (error) {
+          console.log(error.message);
+        }
+      },
+    );
+
+    socket.on("disconnect", () => {}); // socket.on("disconnect") — fires when a client disconnects. Fixed (built into Socket.io, you cannot rename these)
   });
 };
 

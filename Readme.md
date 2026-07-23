@@ -101,3 +101,20 @@ Why webhooks matter at all — a user could close the browser tab right after pa
 -- Build the UI for a chat window /chat/:targetUserId
 -- Setup socket.io in backend
 -- npm i socket.io
+-- Setup frontend socket.io-client
+-- Initialise the chat
+-- createSocketConnection
+-- Listen to events
+-- Homework: Improve the UI (chat window as new chats get hidden)
+-- Homework: Fix Security Bug - auth in web sockets
+-- Homework: Fix bug - iF I'm not a friend, then I should not be able to send messsage
+-- Homework: feat: Show Green Symbol when online, last seen 2 hours ago
+-- Homework: Limit messages when fetching from DB
+-- Similar Project Ideas: Tic tac toe, chess game, typeracer
+
+## Notes
+
+-- socket.on(...) = "I'm listening on this channel"
+-- socket.emit(...) = "I'm broadcasting on this channel"
+-- The event name string = the channel name — both sides must say the exact same word or they never hear each other
+-- Why rooms? (so messages only go to the two people chatting, not everyone)
