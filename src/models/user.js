@@ -89,7 +89,7 @@ userSchema.methods.getJWT = async function () {
   const user = this; // "this" is refering to that user who logged in
 
   // Create a JWT Token for the logged in user
-  const token = await jwt.sign({ _id: user._id }, "DEV@Tinder$101", {
+  const token = await jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
   return token;
